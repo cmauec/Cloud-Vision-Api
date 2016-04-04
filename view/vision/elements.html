@@ -1,0 +1,27 @@
+{%extends 'view/base.html'%}
+{%block content%}
+<a href="/" class="home">Inicio</a>
+<div class="mdl-grid">
+  	<div class="mdl-cell mdl-cell--3-col"></div>
+  	<div class="mdl-cell mdl-cell--6-col">
+  		<h1>Elementos</h1>
+		<form action="/vision/elements" method="post" enctype="multipart/form-data" id="vision">
+			<p><div class="fileUpload mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+			    <span>Subir imágen</span>
+			    <input type="file" name="imgpage" id="file"/>
+			</div></p>
+			<!-- <p><input type="file" name="imgpage" /></p> -->
+			<!-- <p><input type="submit" value="Mostrar" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"></p> -->
+		</form>
+		{%if labels%}
+		<img src="{{image}}" width="60%"/>
+		<ul class="demo-list-item mdl-list">
+		{%for label in labels%}
+		<li class="mdl-list__item">{{label.description}} - Precisión {{(label.score*10)}}</li>
+		{%endfor%}
+		</ul>
+		{%endif%}
+	</div>
+  	<div class="mdl-cell mdl-cell--3-col"></div>
+</div>
+{%endblock%}

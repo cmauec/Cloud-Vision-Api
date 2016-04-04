@@ -1,0 +1,25 @@
+{%extends 'view/base.html'%}
+{%block content%}
+<a href="/" class="home">Inicio</a>
+<div class="mdl-grid">
+  	<div class="mdl-cell mdl-cell--3-col"></div>
+  	<div class="mdl-cell mdl-cell--6-col">
+  		<h1>OCR</h1>
+		<form action="/vision/ocr" method="post" enctype="multipart/form-data" id="vision">
+			<p><div class="fileUpload mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+			    <span>Subir imágen</span>
+			    <input type="file" name="imgpage" id="file"/>
+			</div></p>
+			<!-- <p><input type="file" name="imgpage" /></p> -->
+			<!-- <p><input type="submit" value="Mostrar" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"></p> -->
+		</form>
+		{%if texts%}
+		<img src="{{image}}" width="60%"/>
+		<pre>
+			{{texts.0.description}}
+		</pre>
+		{%endif%}
+	</div>
+  	<div class="mdl-cell mdl-cell--3-col"></div>
+</div>
+{%endblock%}

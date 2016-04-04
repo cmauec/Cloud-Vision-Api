@@ -1,0 +1,37 @@
+{%extends 'view/base.html'%}
+{%block content%}
+<a href="/" class="home">Inicio</a>
+<div class="mdl-grid">
+  	<div class="mdl-cell mdl-cell--3-col"></div>
+  	<div class="mdl-cell mdl-cell--6-col">
+  		<h1>Rostros</h1>
+		<form action="/vision/faces" method="post" enctype="multipart/form-data" id="vision">
+			<p><div class="fileUpload mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+			    <span>Subir imágen</span>
+			    <input type="file" name="imgpage" id="file"/>
+			</div></p>
+			<!-- <p><input type="file" name="imgpage" /></p>
+			<p><input type="submit" value="Mostrar" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"></p> -->
+		</form>
+		{%if faces and image_faces_exist%}
+		<div id="div_faces" style="position:relative;">
+			<img src="{{image}}" width="80%" class="img-face"/>
+			{%for face in faces%}
+			<div style="position:absolute;top:{{face.coordenadas.0.1*(492.79/face.width)}}px;left:{{face.coordenadas.0.0*(492.79/face.width)}}px;width:{{(face.coordenadas.1.0-face.coordenadas.0.0)*(492.79/face.width)}}px;height:{{(face.coordenadas.2.1-face.coordenadas.0.1)*(492.79/face.width)}}px;background:transparent;border:solid 2px {{face.color}};border-radius:5px;cursor:pointer;" class="face">
+				<div class="hide data-faces">
+					<ul class="demo-list-item mdl-list">
+						{%for key, value in face.iteritems()%}
+						{%if key not in ['color','coordenadas','width','height','ratio'] and value not in ['Muy improbable','Desconocido']%}
+						<li class="mdl-list__item">{{key}}</li>
+						{%endif%}
+						{%endfor%}
+					</ul>
+				</div>
+			</div>
+			{%endfor%}
+		</div>
+		{%endif%}
+	</div>
+  	<div class="mdl-cell mdl-cell--3-col"></div>
+</div>
+{%endblock%}
