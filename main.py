@@ -41,6 +41,8 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
 http = credentials.authorize(httplib2.Http())
 vision_service = build("vision", "v1", http=http,discoveryServiceUrl=api)
 
+urlfetch.set_default_fetch_deadline(60)
+
 
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.abspath('.')))
 
@@ -121,9 +123,28 @@ class VisionElementsHandler(webapp2.RequestHandler):
                 labels = response['responses'][0]['labelAnnotations']
             else:
                 labels = None
+            labels_array = []
+            if not labels:
+                self.response.write('No se pudo procesar la imagen')
+                return
+            for label in labels:
+                form_fields = {
+                    'key': 'AIzaSyC2zOdsCTQcdhkW0PUZZGYE_jhPBLr2IqI',
+                    'q': urllib.quote(label['description']),
+                    'source': 'en',
+                    'target': 'es'
+                }
+                form_data = urllib.urlencode(form_fields)
+                result = urlfetch.fetch(
+                    url='https://www.googleapis.com/language/translate/v2?key={0}&q={1}&source={2}&target={3}'.format(form_fields['key'],form_fields['q'],form_fields['source'],form_fields['target']),
+                    method=urlfetch.GET)
+                translated = json.loads(result.content)
+                # self.response.write(translated['data']['translations'][0]['translatedText'])
+                # return
+                labels_array.append({'description':translated['data']['translations'][0]['translatedText'],'score':label['score']})
             template = jinja_environment.get_template('view/vision/elements.html')
             template_vars = {
-                'labels':labels,
+                'labels':labels_array,
                 'image':'data:{0};base64,{1}'.format(typeMIME,image_content)
             }
             self.response.write(template.render(template_vars))
@@ -207,6 +228,7 @@ class VisionFacesHandler(webapp2.RequestHandler):
                 faces = None
                 image_faces = None
                 image_faces_exist = False
+                faces_array = None
             template = jinja_environment.get_template('view/vision/faces.html')
             template_vars = {
                 'faces':faces_array,
@@ -267,6 +289,8 @@ class VisionOCRHandler(webapp2.RequestHandler):
             response = service_request.execute()
             if('responses' in response and 'textAnnotations' in response['responses'][0]):
                 texts = response['responses'][0]['textAnnotations']
+            else:
+                texts = None
             template = jinja_environment.get_template('view/vision/ocr.html')
             template_vars = {
                 'texts':texts,

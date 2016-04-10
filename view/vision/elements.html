@@ -1,4 +1,12 @@
 {%extends 'view/base.html'%}
+{%block scripts%}
+{%if labels%}
+responsiveVoice.OnVoiceReady = function() {
+  console.log("speech time?");
+  responsiveVoice.speak("Elementos: {%for label in labels%}{{label.description}}, {%endfor%}", "Spanish Latin American Female");
+};
+{%endif%}
+{%endblock%}
 {%block content%}
 <a href="/" class="home">Inicio</a>
 <div class="mdl-grid">
@@ -19,9 +27,13 @@
 		{%for label in labels%}
 		<li class="mdl-list__item">{{label.description}} - Precisión {{(label.score*10)}}</li>
 		{%endfor%}
+		<!-- <input onclick='responsiveVoice.speak("Elementos: {%for label in labels%}{{label.description}}, {%endfor%}", "Spanish Latin American Female");' type='button' value='Play' /> -->
 		</ul>
 		{%endif%}
 	</div>
   	<div class="mdl-cell mdl-cell--3-col"></div>
 </div>
+<script>
+	setTimeout(responsiveVoice.speak("Welcome to the Responsive Voice website"),15000);
+</script>
 {%endblock%}
