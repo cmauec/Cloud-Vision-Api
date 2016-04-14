@@ -33,6 +33,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
 from googleapiclient import errors
 
+
+key_google_translate = 'AIzaSyC2zOdsCTQcdhkW0PUZZGYE_jhPBLr2IqI' #clave de api para utilizar el API de Google Translate
 api = 'https://vision.googleapis.com/$discovery/rest?version=v1'
 scopes = ['https://www.googleapis.com/auth/cloud-platform']
 
@@ -129,7 +131,7 @@ class VisionElementsHandler(webapp2.RequestHandler):
                 return
             for label in labels:
                 form_fields = {
-                    'key': 'AIzaSyC2zOdsCTQcdhkW0PUZZGYE_jhPBLr2IqI',
+                    'key': key_google_translate,
                     'q': urllib.quote(label['description']),
                     'source': 'en',
                     'target': 'es'
